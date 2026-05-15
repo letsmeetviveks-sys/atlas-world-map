@@ -80,13 +80,14 @@ function drawReferenceLines() {
       { color: PRIME_MERIDIAN.color, weight: PRIME_MERIDIAN.weight, opacity: 0.85, interactive: false }
     ).addTo(referenceLayer);
 
-    // Place at the bottom of the map, just above Antarctic Circle area
-    L.marker([-60, 0], {
+    // Anchored just below the Antarctic land mass area in open ocean,
+    // sitting right on the meridian for an unambiguous visual link.
+    L.marker([-55, 0], {
       icon: L.divIcon({
         className: `ref-label ${PRIME_MERIDIAN.cls}`,
         html: `${PRIME_MERIDIAN.name} · ${PRIME_MERIDIAN.short}`,
-        iconSize: null,
-        iconAnchor: [-6, 8],
+        iconSize: [140, 20],
+        iconAnchor: [70, 10],
       }),
       interactive: false,
     }).addTo(referenceLabelLayer);
