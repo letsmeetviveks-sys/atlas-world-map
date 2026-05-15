@@ -102,18 +102,22 @@ function drawGrid() {
   gridLabelLayer.clearLayers();
   if (!gridVisible) return;
 
-  const step = 15;
+  // Lines: always every 15°. Labels: density depends on zoom to prevent overlap.
+  const lineStep = 15;
+  const z = map.getZoom();
+  // At low zooms, show labels every 30° to avoid crowding; finer steps at higher zoom.
+  const labelStep = z <= 2 ? 30 : (z <= 4 ? 15 : 15);
   const refLats = new Set([0, 23.4394, -23.4394, 66.5638, -66.5638]);
 
   // Parallels (latitude lines)
-  for (let lat = -75; lat <= 75; lat += step) {
+  for (let lat = -75; lat <= 75; lat += lineStep) {
     if (refLats.has(lat) && lat === 0) continue; // Equator drawn separately
     L.polyline(
       [[lat, -180], [lat, 180]],
       { color: '#8b7d52', weight: 0.6, opacity: 0.45, interactive: false }
     ).addTo(gridLayer);
 
-    if (gridLabelsVisible) {
+    if (gridLabelsVisible && lat % labelStep === 0) {
       L.marker([lat, -177], {
         icon: L.divIcon({
           className: 'grid-label',
@@ -128,21 +132,21 @@ function drawGrid() {
   }
 
   // Meridians (longitude lines)
-  for (let lon = -180; lon <= 180; lon += step) {
+  for (let lon = -180; lon <= 180; lon += lineStep) {
     if (lon === 0) continue; // Prime Meridian drawn separately
     L.polyline(
       [[-85, lon], [85, lon]],
       { color: '#8b7d52', weight: 0.6, opacity: 0.45, interactive: false }
     ).addTo(gridLayer);
 
-    if (gridLabelsVisible && lon > -180 && lon < 180) {
-      // Place longitude labels near the top of the map (not on the equator)
+    if (gridLabelsVisible && lon > -180 && lon < 180 && lon % labelStep === 0) {
+      // Place longitude labels near the top of the map, centered on the meridian.
       L.marker([78, lon], {
         icon: L.divIcon({
-          className: 'grid-label',
+          className: 'grid-label grid-label-lon',
           html: formatGridLabel(lon, 'lon'),
-          iconSize: null,
-          iconAnchor: [12, 0],
+          iconSize: [44, 16],
+          iconAnchor: [22, 8],
         }),
         interactive: false,
         keyboard: false,
