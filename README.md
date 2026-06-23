@@ -1,5 +1,6 @@
 # Atlas — Interactive World Map
 
+This is my daughters's (Age 8 years) attempt to learn how to code using AI, she used claud code to generate everything :). Including this documentation.
 A paper-map-styled interactive world atlas for classroom use. Built with vanilla HTML/CSS/JS and [Leaflet](https://leafletjs.com/).
 
 ## Features
